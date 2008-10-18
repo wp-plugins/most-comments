@@ -3,7 +3,7 @@
 Plugin Name: Most Comments Widget
 Plugin URI: http://www.brandinfection.com
 Description: Most Comments as a function and in a Widget 
-Version: 1.0
+Version: 1.1
 Author: Nader Cserny
 Author URI: http://www.brandinfection.com/
 */

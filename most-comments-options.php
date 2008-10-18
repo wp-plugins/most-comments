@@ -15,6 +15,7 @@ if(!empty($_POST['Submit'])) {
 	$most_comments_options = array();
 	
 	$most_comments_options['exclude_nocomments'] =  trim($_POST['most_comments_exclude_nocomments']);
+	$most_comments_options['from_category'] =  trim($_POST['most_comments_from_category']);
 	$most_comments_options['most_comments_template'] =  trim($_POST['most_comments_template_most_comments']);
 	$update_most_comments_queries = array();
 	$update_most_comments_text = array();
@@ -32,10 +33,6 @@ if(!empty($_POST['Submit'])) {
 		$text = '<font color="red">'.__('No Most Comments Option Updated', 'most-comments').'</font>';
 	}
 }
-
-
-
-
 
 $most_comments_options = get_option('most_comments_options');
 ?>
@@ -61,6 +58,23 @@ $most_comments_options = get_option('most_comments_options');
 	<h2><?php _e('Most Comments Options', 'most-comments'); ?></h2>
 	<table class="form-table">
 		<tr>
+			<td valign="top" width="30%"><strong><?php _e('Show comments from post category', 'most-comments'); ?></strong></td>
+			<td valign="top">
+				<select name="most_comments_from_category" size="1">
+					<option value="0"<?php selected('0', $most_comments_options['from_category']); ?>>All</option>
+					<?php
+						$request = "SELECT wp_term_taxonomy.term_id, wp_term_taxonomy.term_taxonomy_id, wp_term_taxonomy.taxonomy, wp_terms.name, wp_terms.slug FROM wp_term_taxonomy, wp_terms WHERE wp_term_taxonomy.term_id = wp_terms.term_id AND wp_term_taxonomy.taxonomy = 'category' ORDER BY wp_terms.name";
+					
+						$categories = $wpdb->get_results($request);
+					
+						foreach ($categories as $category) {
+						?>
+							<option value="<?php echo $category->term_id; ?>"<?php selected($category->term_id, $most_comments_options['from_category']); ?>><?php echo $category->name; ?></option>
+						<?php } ?>
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td valign="top" width="30%"><strong><?php _e('Exclude posts with no comments:', 'most-comments'); ?></strong></td>
 			<td valign="top">
 				<select name="most_comments_exclude_nocomments" size="1">
@@ -68,7 +82,7 @@ $most_comments_options = get_option('most_comments_options');
 					<option value="1"<?php selected('1', $most_comments_options['exclude_nocomments']); ?>><?php _e('Yes', 'most-comments'); ?></option>
 				</select>
 			</td>
-		</tr>		
+		</tr>
 		<tr>
 			<td valign="top">
 				<strong><?php _e('Most Comments Template:', 'most-comments'); ?></strong><br /><br />
